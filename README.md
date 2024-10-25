@@ -48,24 +48,18 @@ Before starting the main stack, set up SSL certificates for your domain:
 
 1. Make sure your domain is properly configured and pointing to your server.
 2. Ensure ports **80** and **443** are open.
-3. Run the SSL setup using Certbot:
+3. Run the SSL setup using Certbot and wait for certificates resolution
 
-   ```bash
-   docker compose -f docker-compose-ssl.yml up -d
-   ```
-
-4. Once the certificates are successfully obtained, stop the containers:
-
-   ```bash
-   docker compose -f docker-compose-ssl.yml down
-   ```
+```bash
+sudo docker-compose -f docker-compose-ssl.yml up
+```
 
 ### 4. Start the Main Stack
 
 With SSL certificates in place, start the entire stack:
 
 ```bash
-docker compose up -d
+sudo docker-compose up -d
 ```
 
 This will launch Keycloak, PostgreSQL, and Nginx, all configured to use SSL.
