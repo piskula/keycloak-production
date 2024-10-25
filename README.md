@@ -20,7 +20,7 @@ Before starting, ensure you have the following:
 First, clone the repository from GitHub:
 
 ```bash
-git clone https://github.com/anqorithm/keycloak-production.git
+git clone https://github.com/piskula/keycloak-production.git
 cd keycloak-production
 ```
 
@@ -31,10 +31,16 @@ Copy the provided `.env.example` to `.env` and adjust the variables to fit your 
 ```bash
 cp .env.example .env
 ```
+```bash
+cp cloudflare.ini.example cloudflare.ini
+```
 
 Update the following in the `.env` file:
 - `KEYCLOAK_DOMAIN`: Your valid domain name.
 - `CERTBOT_LETSENCRYPT_EMAIL`: Your email address for SSL certificate registration.
+
+Update the following in the `cloudflare.ini` file:
+- `dns_cloudflare_api_token`: Your API token from cloudflare.
 
 ### 3. SSL Setup (Run First)
 
