@@ -38,6 +38,7 @@ cp cloudflare.ini.example cloudflare.ini
 Update the following in the `.env` file:
 - `KEYCLOAK_DOMAIN`: Your valid domain name.
 - `CERTBOT_LETSENCRYPT_EMAIL`: Your email address for SSL certificate registration.
+- `POSTGRES_DB_PASSWORD`: Change default DB password (consider also changing user).
 
 Update the following in the `cloudflare.ini` file:
 - `dns_cloudflare_api_token`: Your API token from cloudflare.
@@ -89,16 +90,16 @@ These can be changed in the `.env` file under `KEYCLOAK_ADMIN` and `KEYCLOAK_ADM
 
 All configuration is managed through environment variables in the `.env` file:
 
-| **Variable**                  | **Description**                        | **Default Value**        | **Required** |
-|-------------------------------|----------------------------------------|--------------------------|--------------|
-| `KEYCLOAK_DOMAIN`              | Domain for the Keycloak server         |                          | Yes          |
-| `CERTBOT_LETSENCRYPT_EMAIL`    | Email for Let's Encrypt registration   |                          | Yes          |
-| `SUBNET`                       | Subnet for container network           | 172.16.0.0/29            | No           |
-| `KEYCLOAK_VERSION`             | Keycloak image version                 | latest                   | No           |
-| `POSTGRES_VERSION`             | PostgreSQL image version               | latest                   | No           |
-| `POSTGRES_KEYCLOAK_PASSWORD`   | Password for Keycloak PostgreSQL user  | keycloak                 | No           |
-| `NGINX_VERSION`                | Nginx image version                    | latest                   | No           |
-| `CERTBOT_VERSION`              | Certbot image version                  | latest                   | No           |
+| **Variable**                | **Description**                        | **Default Value** | **Required** |
+|-----------------------------|----------------------------------------|-------------------|--------------|
+| `KEYCLOAK_DOMAIN`           | Domain for the Keycloak server         |                   | Yes          |
+| `CERTBOT_LETSENCRYPT_EMAIL` | Email for Let's Encrypt registration   |                   | Yes          |
+| `SUBNET`                    | Subnet for container network           | 172.16.0.0/29     | No           |
+| `KEYCLOAK_VERSION`          | Keycloak image version                 | latest            | No           |
+| `POSTGRES_VERSION`          | PostgreSQL image version               | latest            | No           |
+| `POSTGRES_DB_PASSWORD`      | Password for Keycloak PostgreSQL user  | defaultDbPassword | **No !!!**   |
+| `NGINX_VERSION`             | Nginx image version                    | latest            | No           |
+| `CERTBOT_VERSION`           | Certbot image version                  | latest            | No           |
 
 ## Contributing
 

@@ -5,11 +5,14 @@ services:
     image: postgres:${POSTGRES_VERSION:-latest}  # PostgreSQL image
     container_name: postgres
     environment:
-      POSTGRES_DB: keycloak  # Database name
-      POSTGRES_USER: keycloak  # Database user
-      POSTGRES_PASSWORD: ${POSTGRES_KEYCLOAK_PASSWORD:-keycloak}  # Database password
+      POSTGRES_MULTIPLE_DATABASES: keycloak,charging  # Database name
+      POSTGRES_USER: defaultDbUser  # Database user
+      POSTGRES_PASSWORD: ${POSTGRES_DB_PASSWORD:-defaultDbPassword}  # Database password
     volumes:
       - postgres_data:/var/lib/postgresql/data  # Persist database data
+      - ./dbInit/:/docker-entrypoint-initdb.d # initial script to create more databases
+    ports:  # when we need to work with DB outside of docker network (port-forward)
+      - 5432:5432
     networks:
       - local
     restart: always  # Restart on failure
@@ -21,9 +24,10 @@ services:
     container_name: keycloak
     environment:
       KC_DB: postgres  # Use PostgreSQL as the database
-      KC_DB_URL_HOST: postgres  # Link to the Postgres service
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: ${POSTGRES_KEYCLOAK_PASSWORD:-keycloak}
+#      KC_DB_URL_HOST: postgres  # Link to the Postgres service
+      KC_DB_URL: jdbc:postgresql://postgres/keycloak  # Link to the Postgres service
+      KC_DB_USERNAME: defaultDbUser
+      KC_DB_PASSWORD: ${POSTGRES_DB_PASSWORD:-defaultDbPassword}
       KC_BOOTSTRAP_ADMIN_USERNAME: admin  # Default admin credentials
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_PROXY_HEADERS: xforwarded  # Support for reverse proxy headers
