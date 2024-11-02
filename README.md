@@ -79,6 +79,15 @@ Add the following entry to run the renewal command:
 0 */12 * * * docker compose run --rm certbot
 ```
 
+## Port-Forward
+We often need to be able to reach into our VM through port-forward. When configuring e.g. with Putty, you need to
+specify source and destination in following way
+- `source` is address on your local machine
+- `destination` is address on VM
+
+in Putty forwarding port 5432 inside VM to 5433 on our machine will look like:
+`L5433 (source) - localhost:5432 (VM)`
+
 ## Keycloak Admin Information
 
 - Default admin username: `admin`
