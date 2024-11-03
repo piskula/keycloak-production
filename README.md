@@ -68,9 +68,17 @@ With SSL certificates in place, start the entire stack:
 sudo docker-compose up -d
 ```
 
+### 5. Run application (setup running charging as a service)
+- You need to ensure `POSTGRES_DB_PASSWORD` (global) environment variable is set (is used in startup script)
+  - you need to run `export POSTGRES_DB_PASSWORD=[value]`
+- copy [charging-service.service](service/charging-service.service) into `/etc/systemd/system`
+  - you can run `sudo cp service/charging-service.service /etc/systemd/system/charging-service.service`
+- `sudo systemctl daemon-reload`
+- `sudo systemctl start charging-service.service`
+
 This will launch Keycloak, PostgreSQL, and Nginx, all configured to use SSL.
 
-### 5. Set Up Automatic Certificate Renewal
+### 6. Set Up Automatic Certificate Renewal
 
 To keep your SSL certificates updated, configure `crontab` to renew them automatically every 12 hours:
 

@@ -1,0 +1,16 @@
+[Unit]
+Description=Charging - Java Application service
+
+[Service]
+User=vmtryondro
+WorkingDirectory=/home/vmtryondro/module-server
+ExecStart=/bin/bash /home/vmtryondro/keycloak-production/service/start-charging.sh
+Type=simple
+
+Restart=on-failure
+RestartSec=10
+StandardOutput=file:/home/vmtryondro/module-server/server.log
+StandardError=file:/home/vmtryondro/module-server/server-error.log
+
+[Install]
+WantedBy=multi-user.target
