@@ -4,6 +4,7 @@ Description=Charging - Java Application service
 [Service]
 User=vmtryondro
 WorkingDirectory=/home/vmtryondro/module-server
+EnvironmentFile=/home/vmtryondro/keycloak-production/.env
 ExecStart=/bin/bash /home/vmtryondro/keycloak-production/service/start-charging.sh
 Type=simple
 

@@ -39,6 +39,7 @@ Update the following in the `.env` file:
 - `KEYCLOAK_DOMAIN`: Your valid domain name. (also `KEYCLOAK_DOMAIN_ALTERNATIVE` and `CHARGING_DOMAIN`)
 - `CERTBOT_LETSENCRYPT_EMAIL`: Your email address for SSL certificate registration.
 - `POSTGRES_DB_PASSWORD`: Change default DB password (consider also changing user).
+- `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET` with configured realm client credentials 
 
 Update the following in the `cloudflare.ini` file:
 - `dns_cloudflare_api_token`: Your API token from cloudflare.
@@ -75,6 +76,7 @@ sudo docker-compose up -d
   - you can run `sudo cp service/charging-service.service /etc/systemd/system/charging-service.service`
 - `sudo systemctl daemon-reload`
 - `sudo systemctl start charging-service.service`
+- you can check the status with `sudo systemctl status charging-service.service`
 
 This will launch Keycloak, PostgreSQL, and Nginx, all configured to use SSL.
 
