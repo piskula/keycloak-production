@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name ${KEYCLOAK_DOMAIN};
+    server_name ${KEYCLOAK_DOMAIN} ${KEYCLOAK_DOMAIN_ALTERNATIVE} ${CHARGING_DOMAIN};
     root /var/www/certbot;
 
     location /.well-known/acme-challenge/ {
@@ -27,6 +27,57 @@ server {
 
     location / {
         proxy_pass http://keycloak:8080/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Host $server_name;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-Port $server_port;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+server {
+    listen 443 ssl http2;
+    server_name ${KEYCLOAK_DOMAIN_ALTERNATIVE};
+
+    ssl_certificate /etc/letsencrypt/live/${KEYCLOAK_DOMAIN_ALTERNATIVE}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${KEYCLOAK_DOMAIN_ALTERNATIVE}/privkey.pem;
+
+    root /var/www/certbot;
+
+    location /.well-known/acme-challenge/ {
+        allow all;
+    }
+
+    location / {
+        proxy_pass http://keycloak:8080/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Host $server_name;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-Port $server_port;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+# Charging
+server {
+    listen 443 ssl http2;
+    server_name ${CHARGING_DOMAIN};
+
+    ssl_certificate /etc/letsencrypt/live/${CHARGING_DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${CHARGING_DOMAIN}/privkey.pem;
+
+    root /var/www/certbot;
+
+    location /.well-known/acme-challenge/ {
+        allow all;
+    }
+
+    location / {
+        proxy_pass http://localhost:8080/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

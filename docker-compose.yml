@@ -49,7 +49,9 @@ services:
     image: nginx:${NGINX_VERSION:-latest}
     container_name: nginx
     environment:
-      KEYCLOAK_DOMAIN: ${KEYCLOAK_DOMAIN}  # Nginx uses Keycloak's domain
+      KEYCLOAK_DOMAIN: ${KEYCLOAK_DOMAIN}                         # Nginx uses Keycloak's domain
+      KEYCLOAK_DOMAIN_ALTERNATIVE: ${KEYCLOAK_DOMAIN_ALTERNATIVE}
+      CHARGING_DOMAIN: ${CHARGING_DOMAIN}
     volumes:
       - ./nginx/templates:/etc/nginx/templates  # Nginx configuration
       - ./certbot/conf:/etc/letsencrypt  # SSL certificates
@@ -67,14 +69,16 @@ services:
     image: certbot/certbot:${CERTBOT_VERSION:-latest}
     container_name: certbot
     environment:
-      CERTBOT_LETSENCRYPT_EMAIL: ${CERTBOT_LETSENCRYPT_EMAIL}  # Email for SSL registration
-      KEYCLOAK_DOMAIN: ${KEYCLOAK_DOMAIN}  # Domain to obtain SSL certificate for
+      CERTBOT_LETSENCRYPT_EMAIL: ${CERTBOT_LETSENCRYPT_EMAIL}     # Email for SSL registration
+      KEYCLOAK_DOMAIN: ${KEYCLOAK_DOMAIN}                         # Domain to obtain SSL certificate for
+      KEYCLOAK_DOMAIN_ALTERNATIVE: ${KEYCLOAK_DOMAIN_ALTERNATIVE} # 2nd domain name for Keycloak
+      CHARGING_DOMAIN: ${CHARGING_DOMAIN}                         # 3rd domain for charging app
     volumes:
       - ./certbot/conf:/etc/letsencrypt  # SSL certificates storage
       - ./certbot/www:/var/www/certbot  # Webroot for SSL verification
     depends_on:
       - nginx  # Nginx must be running before Certbot
-    command: certonly --non-interactive --webroot -w /var/www/certbot --email ${CERTBOT_LETSENCRYPT_EMAIL} -d ${KEYCLOAK_DOMAIN} --agree-tos  # Obtain SSL certificate
+    command: certonly --non-interactive --webroot -w /var/www/certbot --email ${CERTBOT_LETSENCRYPT_EMAIL} -d ${KEYCLOAK_DOMAIN} -d ${KEYCLOAK_DOMAIN_ALTERNATIVE} -d ${CHARGING_DOMAIN} --agree-tos  # Obtain SSL certificate
     mem_limit: 50m  # Limit memory usage to 50MB
 
 # Define volumes for data persistence
