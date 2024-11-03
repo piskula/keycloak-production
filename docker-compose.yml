@@ -59,6 +59,8 @@ services:
     ports:
       - 80:80  # HTTP port
       - 443:443  # HTTPS port
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # to make localhost, where java spring is running, available from docker
     networks:
       - local
     restart: always

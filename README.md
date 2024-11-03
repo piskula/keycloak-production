@@ -36,7 +36,7 @@ cp cloudflare.ini.example cloudflare.ini
 ```
 
 Update the following in the `.env` file:
-- `KEYCLOAK_DOMAIN`: Your valid domain name.
+- `KEYCLOAK_DOMAIN`: Your valid domain name. (also `KEYCLOAK_DOMAIN_ALTERNATIVE` and `CHARGING_DOMAIN`)
 - `CERTBOT_LETSENCRYPT_EMAIL`: Your email address for SSL certificate registration.
 - `POSTGRES_DB_PASSWORD`: Change default DB password (consider also changing user).
 
@@ -54,6 +54,11 @@ Before starting the main stack, set up SSL certificates for your domain:
 ```bash
 sudo docker-compose -f docker-compose-ssl.yml up
 ```
+
+#### When multiple DNS subdomains
+1. try switching form non-proxy to proxy
+2. try changing certbot to only validate main domain
+3. try changing cloudflare SSL/TLS config from AUTO(flexible) to Custom(Full or Full strict)
 
 ### 4. Start the Main Stack
 
