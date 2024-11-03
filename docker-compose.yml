@@ -49,6 +49,7 @@ services:
     image: nginx:${NGINX_VERSION:-latest}
     container_name: nginx
     environment:
+      MAIN_DOMAIN: ${MAIN_DOMAIN}                                 # domain itself
       KEYCLOAK_DOMAIN: ${KEYCLOAK_DOMAIN}                         # Nginx uses Keycloak's domain
       KEYCLOAK_DOMAIN_ALTERNATIVE: ${KEYCLOAK_DOMAIN_ALTERNATIVE}
       CHARGING_DOMAIN: ${CHARGING_DOMAIN}
