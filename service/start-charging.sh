@@ -9,4 +9,7 @@ logFileName=logs/charging-$current_time.log
   -Dspring.security.oauth2.client.registration.keycloak.client-id=${KEYCLOAK_CLIENT_ID} \
   -Dspring.security.oauth2.client.registration.keycloak.client-secret=${KEYCLOAK_CLIENT_SECRET} \
   -Dspring.security.oauth2.client.provider.keycloak.issuer-uri="https://${KEYCLOAK_DOMAIN_ALTERNATIVE}/realms/momosi" \
+  -Dapplication.station.cloudStatusUrl=${STATION_STATUS_URL} \
+  -Dapplication.station.cloudSetUrl=${STATION_SET_URL} \
+  -Dapplication.station.cloudToken=${STATION_TOKEN} \
   -jar ../module-server/module-server.jar

@@ -36,10 +36,12 @@ cp cloudflare.ini.example cloudflare.ini
 ```
 
 Update the following in the `.env` file:
-- `KEYCLOAK_DOMAIN`: Your valid domain name. (also `KEYCLOAK_DOMAIN_ALTERNATIVE` and `CHARGING_DOMAIN`)
+- `KEYCLOAK_DOMAIN`: Your valid domain name
+  - you might need to adjust `KEYCLOAK_DOMAIN_ALTERNATIVE` and `CHARGING_DOMAIN` but should be fine
 - `CERTBOT_LETSENCRYPT_EMAIL`: Your email address for SSL certificate registration.
 - `POSTGRES_DB_PASSWORD`: Change default DB password (consider also changing user).
-- `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET` with configured realm client credentials 
+- `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET` with configured realm client credentials
+- `STATION_XXX` credentials, (URL for connection and Bearer auth token)
 
 Update the following in the `cloudflare.ini` file:
 - `dns_cloudflare_api_token`: Your API token from cloudflare.
