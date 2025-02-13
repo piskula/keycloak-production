@@ -3,11 +3,7 @@ services:
   # Nginx: Web Server and Reverse Proxy
   nginx:
     image: nginx:${NGINX_VERSION:-latest}
-    environment:
-      MAIN_DOMAIN: ${MAIN_DOMAIN}                                 # domain itself
-      KEYCLOAK_DOMAIN: ${KEYCLOAK_DOMAIN}                         # Domain name for Keycloak
-      KEYCLOAK_DOMAIN_ALTERNATIVE: ${KEYCLOAK_DOMAIN_ALTERNATIVE} # 2nd domain name for Keycloak
-      CHARGING_DOMAIN: ${CHARGING_DOMAIN}                         # Domain for charging app
+    env_file: "./.env"
     mem_limit: 50m                         # Maximum memory limit
     mem_reservation: 30m                   # Minimum memory reservation
     container_name: nginx
@@ -25,9 +21,7 @@ services:
   # Certbot: SSL Certificate Management
   certbot:
     image: certbot/dns-cloudflare:${CERTBOT_VERSION:-latest}
-    environment:
-      CERTBOT_LETSENCRYPT_EMAIL: ${CERTBOT_LETSENCRYPT_EMAIL} # Email for Let's Encrypt notifications
-      MAIN_DOMAIN: ${MAIN_DOMAIN}                             # Domain for the SSL certificate
+    env_file: "./.env"
     mem_limit: 50m       # Maximum memory limit
     mem_reservation: 30m # Minimum memory reservation
     container_name: certbot

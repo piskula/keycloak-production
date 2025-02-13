@@ -8,10 +8,10 @@ This project sets up a secure Keycloak server using PostgreSQL as the database, 
 
 Before starting, ensure you have the following:
 
-- **VM on GCP** (or any cloud provider): Make sure it’s configured and running with open ports 80 (HTTP) and 443 (HTTPS).
-- **A valid domain name**: Ensure the domain is correctly pointing to your server's IP address.
-- **Docker Engine**: [Install Docker](https://docs.docker.com/get-docker/).
-- **Docker Compose**: [Install Docker Compose](https://docs.docker.com/compose/install/).
+- **VM with IP Address** (on GCP or any cloud provider): Make sure it’s configured and running with open ports 80 (HTTP) and 443 (HTTPS).
+- **A valid domain name and DNS pointing every subdomain to IP address.** - use Cloudflare (?)
+- **Docker** on VM (test with `docker compose version`)
+- **JAVA** on VM (min 17, test with `java -version`)
 
 ## Installation
 
@@ -26,8 +26,7 @@ cd keycloak-production
 
 ### 2. Configure Environment Variables
 
-Copy the provided `.env.example` to `.env` and adjust the variables to fit your setup:
-
+Copy the provided `.env.example` to `.env`, `cloudflare.ini.example` to `cloudflare.ini` and adjust the variables to fit your setup:
 ```bash
 cp .env.example .env
 ```
@@ -51,36 +50,35 @@ Update the following in the `cloudflare.ini` file:
 Before starting the main stack, set up SSL certificates for your domain:
 
 1. Make sure your domain is properly configured and pointing to your server.
+   - add all subdomains and link them to IP address of the VM
 2. Ensure ports **80** and **443** are open.
-3. Run the SSL setup using Certbot and wait for certificates resolution
-
+3. Ensure all relevant ENVIRONMENT variables are taken into account when resolving certificates, or apply them manually
+4. Change Cloudflare SSL/TLS encryption to Full!
+5. Run the SSL setup using Certbot and wait for certificates resolution:
 ```bash
 sudo docker-compose -f docker-compose-ssl.yml up
 ```
-
-#### When multiple DNS subdomains
-1. try switching form non-proxy to proxy
-2. try changing certbot to only validate main domain
-3. try changing cloudflare SSL/TLS config from AUTO(flexible) to Custom(Full or Full strict)
+6. after this is done start the main stack and check that keycloak is reachable
+   - if there are neverending redirects or complains about not-secure page
+     - certificates were not fetched properly
+     - make sure env variables are not ignored
 
 ### 4. Start the Main Stack
-
 With SSL certificates in place, start the entire stack:
-
 ```bash
 sudo docker-compose up -d
 ```
+This will launch Keycloak, PostgreSQL, and Nginx, all configured to use SSL.
 
 ### 5. Run application (setup running charging as a service)
 - You need to ensure `POSTGRES_DB_PASSWORD` (global) environment variable is set (is used in startup script)
   - you need to run `export POSTGRES_DB_PASSWORD=[value]`
 - copy [charging-service.service](service/charging-service.service) into `/etc/systemd/system`
   - you can run `sudo cp service/charging-service.service /etc/systemd/system/charging-service.service`
+- make sure paths inside [charging-service](service/charging-service.service) do match and also make sure user is same as current user.
 - `sudo systemctl daemon-reload`
 - `sudo systemctl start charging-service.service`
 - you can check the status with `sudo systemctl status charging-service.service`
-
-This will launch Keycloak, PostgreSQL, and Nginx, all configured to use SSL.
 
 ### 6. Set Up Automatic Certificate Renewal
 
