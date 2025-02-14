@@ -29,7 +29,6 @@ services:
       - ./certbot/conf:/etc/letsencrypt  # SSL certificates storage
       - ./certbot/www:/var/www/certbot   # Webroot for ACME challenges
       - ./cloudflare.ini:/cloudflare.ini
-    # command: certonly --non-interactive --dns-cloudflare --dns-cloudflare-credentials /cloudflare.ini -w /var/www/certbot --email ${CERTBOT_LETSENCRYPT_EMAIL} -d ${KEYCLOAK_DOMAIN} --agree-tos
     command: certonly --non-interactive --dns-cloudflare --dns-cloudflare-credentials /cloudflare.ini -w /var/www/certbot --email ${CERTBOT_LETSENCRYPT_EMAIL} -d ${MAIN_DOMAIN} --agree-tos
     depends_on:
       - nginx  # Ensures Nginx is running before Certbot starts

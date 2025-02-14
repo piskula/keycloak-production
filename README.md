@@ -64,13 +64,24 @@ sudo docker-compose -f docker-compose-ssl.yml up
      - make sure env variables are not ignored
 
 ### 4. Start the Main Stack
+Before starting main stack, make sure those 2 environment variables are available globally:
+- `POSTGRES_DB_PASSWORD`
+- `KEYCLOAK_DOMAIN`
+
 With SSL certificates in place, start the entire stack:
 ```bash
 sudo docker-compose up -d
 ```
 This will launch Keycloak, PostgreSQL, and Nginx, all configured to use SSL.
 
-### 5. Run application (setup running charging as a service)
+### 5. Configure keycloak
+- login to keycloak admin console
+- create new realm
+- set allowed redirect URIs
+- create new role MOMO_ADMIN
+- note down client-id and client-secret
+
+### 6. Run application (setup running charging as a service)
 - You need to ensure `POSTGRES_DB_PASSWORD` (global) environment variable is set (is used in startup script)
   - you need to run `export POSTGRES_DB_PASSWORD=[value]`
 - copy [charging-service.service](service/charging-service.service) into `/etc/systemd/system`
@@ -80,7 +91,7 @@ This will launch Keycloak, PostgreSQL, and Nginx, all configured to use SSL.
 - `sudo systemctl start charging-service.service`
 - you can check the status with `sudo systemctl status charging-service.service`
 
-### 6. Set Up Automatic Certificate Renewal
+### 7. Set Up Automatic Certificate Renewal
 
 To keep your SSL certificates updated, configure `crontab` to renew them automatically every 12 hours:
 

@@ -22,13 +22,13 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION:-latest}  # Keycloak image
     container_name: keycloak
+    env_file: "./.env"
     environment:
       KC_DB: postgres  # Use PostgreSQL as the database
       KC_DB_URL: jdbc:postgresql://postgres/keycloak  # Link to the Postgres service
       KC_DB_USERNAME: defaultDbUser
       KC_DB_PASSWORD: ${POSTGRES_DB_PASSWORD:-defaultDbPassword}
       KC_BOOTSTRAP_ADMIN_USERNAME: admin  # Default admin credentials
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_PROXY_HEADERS: xforwarded  # Support for reverse proxy headers
       KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
@@ -48,6 +48,11 @@ services:
     image: nginx:${NGINX_VERSION:-latest}
     container_name: nginx
     env_file: "./.env"
+#    environment:
+#      MAIN_DOMAIN: ${MAIN_DOMAIN}                                 # domain itself
+#      KEYCLOAK_DOMAIN: ${KEYCLOAK_DOMAIN}                         # Nginx uses Keycloak's domain
+#      KEYCLOAK_DOMAIN_ALTERNATIVE: ${KEYCLOAK_DOMAIN_ALTERNATIVE}
+#      CHARGING_DOMAIN: ${CHARGING_DOMAIN}
     volumes:
       - ./nginx/templates:/etc/nginx/templates  # Nginx configuration
       - ./certbot/conf:/etc/letsencrypt  # SSL certificates
@@ -67,6 +72,11 @@ services:
     image: certbot/certbot:${CERTBOT_VERSION:-latest}
     container_name: certbot
     env_file: "./.env"
+#    environment:
+#      CERTBOT_LETSENCRYPT_EMAIL: ${CERTBOT_LETSENCRYPT_EMAIL}     # Email for SSL registration
+#      KEYCLOAK_DOMAIN: ${KEYCLOAK_DOMAIN}                         # Domain to obtain SSL certificate for
+#      KEYCLOAK_DOMAIN_ALTERNATIVE: ${KEYCLOAK_DOMAIN_ALTERNATIVE} # 2nd domain name for Keycloak
+#      CHARGING_DOMAIN: ${CHARGING_DOMAIN}                         # 3rd domain for charging app
     volumes:
       - ./certbot/conf:/etc/letsencrypt  # SSL certificates storage
       - ./certbot/www:/var/www/certbot  # Webroot for SSL verification
