@@ -17,8 +17,10 @@ Before starting, ensure you have the following:
 
 ### 1. Clone the Repository
 
-First, clone the repository from GitHub:
+Scripts are meant to work within working directory `/home/vmtryondro`. So consider that by creating such dir and work
+in it or adjust the code to point to your directory.
 
+First, clone the repository from GitHub:
 ```bash
 git clone https://github.com/piskula/keycloak-production.git
 cd keycloak-production
@@ -56,21 +58,43 @@ Before starting the main stack, set up SSL certificates for your domain:
 4. Change Cloudflare SSL/TLS encryption to Full!
 5. Run the SSL setup using Certbot and wait for certificates resolution:
 ```bash
-sudo docker-compose -f docker-compose-ssl.yml up
+sudo docker compose -f docker-compose-ssl.yml up
 ```
-6. after this is done start the main stack and check that keycloak is reachable
-   - if there are neverending redirects or complains about not-secure page
-     - certificates were not fetched properly
-     - make sure env variables are not ignored
 
 ### 4. Start the Main Stack
+Before starting main stack, make sure those 2 environment variables are available globally:
+- `POSTGRES_DB_PASSWORD`
+- `KEYCLOAK_DOMAIN`
+
+For this purpose you can edit `/etc/environment` file and reboot the system.
+
 With SSL certificates in place, start the entire stack:
 ```bash
-sudo docker-compose up -d
+sudo docker compose up -d
 ```
 This will launch Keycloak, PostgreSQL, and Nginx, all configured to use SSL.
 
-### 5. Run application (setup running charging as a service)
+after this is done check that keycloak is reachable
+- if there are neverending redirects or complains about not-secure page
+    - certificates were not fetched properly
+    - make sure env variables are not ignored
+
+### 5. Configure keycloak
+- login to keycloak admin console
+- create new realm `momosi`
+- create new client `kutlikova`
+  - client auth `ON`
+  - authorization `OFF`
+  - auth flow `STANDARD`, rest `OFF`
+  - set ROOT URL and Valid Redirect URL same as root with `/*` plus if needed also `localhost:4200/*` for local development
+- note down client-id and client-secret
+- create new role MOMO_ADMIN
+  - optionally you can add MOMO_USER and add him to default roles so it is inherited automatically
+- configure role mapping
+  - go to client `kutlikova` -> client scopes -> add predefined mapper -> `realm roles`
+  - change role mapping to work also for id token (`Add to ID token` option)
+
+### 6. Run application (setup running charging as a service)
 - You need to ensure `POSTGRES_DB_PASSWORD` (global) environment variable is set (is used in startup script)
   - you need to run `export POSTGRES_DB_PASSWORD=[value]`
 - copy [charging-service.service](service/charging-service.service) into `/etc/systemd/system`
@@ -80,7 +104,7 @@ This will launch Keycloak, PostgreSQL, and Nginx, all configured to use SSL.
 - `sudo systemctl start charging-service.service`
 - you can check the status with `sudo systemctl status charging-service.service`
 
-### 6. Set Up Automatic Certificate Renewal
+### 7. Set Up Automatic Certificate Renewal
 
 To keep your SSL certificates updated, configure `crontab` to renew them automatically every 12 hours:
 
