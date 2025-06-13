@@ -10,15 +10,15 @@ Before starting, ensure you have the following:
 
 - **VM with IP Address** (on GCP or any cloud provider): Make sure it’s configured and running with open ports 80 (HTTP) and 443 (HTTPS).
 - **A valid domain name and DNS pointing every subdomain to IP address.** - use Cloudflare (?)
-- **Docker** on VM (test with `docker compose version`)
-- **JAVA** on VM (min 17, test with `java -version`)
+- **Docker** on VM (test with `docker ps` and `docker compose version`)
+- **JAVA** on VM (21, test with `java -version`)
 
 ## Installation
 
 ### 1. Clone the Repository
 
 Scripts are meant to work within working directory `/home/vmtryondro`. So consider that by creating such dir and work
-in it or adjust the code to point to your directory.
+in it or adjust the code (**systemd service**) to point to your directory.
 
 First, clone the repository from GitHub:
 ```bash

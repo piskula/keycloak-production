@@ -12,4 +12,6 @@ logFileName=logs/charging-$current_time.log
   -Dapplication.station.cloudStatusUrl=${STATION_STATUS_URL} \
   -Dapplication.station.cloudSetUrl=${STATION_SET_URL} \
   -Dapplication.station.cloudToken=${STATION_TOKEN} \
+  -Dapplication.station.cloudDownload=${STATION_DOWNLOAD} \
+  -Dapplication.station.cloudDownloadToken=${STATION_DOWNLOAD_TOKEN} \
   -jar ../module-server/module-server.jar
