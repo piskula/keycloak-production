@@ -93,6 +93,10 @@ after this is done check that keycloak is reachable
 - configure role mapping
   - go to client `kutlikova` -> client scopes -> add predefined mapper -> `realm roles`
   - change role mapping to work also for id token (`Add to ID token` option)
+ 
+##### 5.1 Public keycloak
+- when using Auth from Angular (so Spring Boot is resource server, and not client) we should not use client secret
+- so set client auth `OFF` and do not use client secret, use PKCE S256
 
 ### 6. Run application (setup running charging as a service)
 - You need to ensure `POSTGRES_DB_PASSWORD` (global) environment variable is set (is used in startup script)
