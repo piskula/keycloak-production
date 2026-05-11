@@ -41,7 +41,7 @@ Update the following in the `.env` file:
   - you might need to adjust `KEYCLOAK_DOMAIN_ALTERNATIVE` and `CHARGING_DOMAIN` but should be fine
 - `CERTBOT_LETSENCRYPT_EMAIL`: Your email address for SSL certificate registration.
 - `POSTGRES_DB_PASSWORD`: Change default DB password (consider also changing user).
-- `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET` with configured realm client credentials
+- ~~`KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET` with configured realm client credentials~~
 - `STATION_XXX` credentials, (URL for connection and Bearer auth token)
 
 Update the following in the `cloudflare.ini` file:
@@ -96,7 +96,10 @@ after this is done check that keycloak is reachable
  
 ##### 5.1 Public keycloak
 - when using Auth from Angular (so Spring Boot is resource server, and not client) we should not use client secret
-- so set client auth `OFF` and do not use client secret, use PKCE S256
+- so (optionally create other client)
+  - and set client auth `OFF` and do not use client secret, disable implicit flow
+  - set web origin to exact place where Angular will run on PROD
+  - go to advanced tab and use PKCE Proof Key For Code Exchange S256
 
 ### 6. Run application (setup running charging as a service)
 - You need to ensure `POSTGRES_DB_PASSWORD` (global) environment variable is set (is used in startup script)
