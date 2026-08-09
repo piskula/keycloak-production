@@ -3,15 +3,15 @@ Description=Charging - Java Application service
 
 [Service]
 User=root
-WorkingDirectory=/home/vmtryondro/module-server
-EnvironmentFile=/home/vmtryondro/keycloak-production/.env
-ExecStart=/bin/bash /home/vmtryondro/keycloak-production/service/start-charging.sh
+WorkingDirectory=/root/module-server
+EnvironmentFile=/root/keycloak-production/.env
+ExecStart=/bin/bash /root/keycloak-production/service/start-charging.sh
 Type=simple
 
 Restart=on-failure
 RestartSec=10
-StandardOutput=file:/home/vmtryondro/module-server/server.log
-StandardError=file:/home/vmtryondro/module-server/server-error.log
+StandardOutput=file:/root/module-server/server.log
+StandardError=file:/root/module-server/server-error.log
 
 [Install]
 WantedBy=multi-user.target
