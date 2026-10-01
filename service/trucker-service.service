@@ -1,0 +1,17 @@
+[Unit]
+Description=TruckTrack - Java Application service
+
+[Service]
+User=root
+WorkingDirectory=/root/module-server-tt
+EnvironmentFile=/root/keycloak-production/.env
+ExecStart=/bin/bash /root/keycloak-production/service/start-trucker.sh
+Type=simple
+
+Restart=on-failure
+RestartSec=10
+StandardOutput=file:/root/module-server-tt/server.log
+StandardError=file:/root/module-server-tt/server-error.log
+
+[Install]
+WantedBy=multi-user.target

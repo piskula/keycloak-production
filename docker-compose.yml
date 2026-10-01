@@ -18,6 +18,39 @@ services:
     restart: always  # Restart on failure
     mem_limit: 300m  # Limit memory usage to 300MB
 
+  postgres-tt:
+    image: postgres:${POSTGRES_VERSION:-latest}  # PostgreSQL image
+    container_name: postgres-tt
+    environment:
+      POSTGRES_DB: truckTrack  # Database name
+      POSTGRES_USER: defaultDbUser  # Database user
+      POSTGRES_PASSWORD: ${POSTGRES_DB_PASSWORD:-defaultDbPassword}  # Database password
+    volumes:
+      - postgres_data_tt:/var/lib/postgresql/data  # Persist database data
+    ports:
+      - "127.0.0.1:5435:5432"
+    networks:
+      - local
+    restart: always
+    mem_limit: 300m
+
+  minio-tt:
+    image: minio/minio:latest
+    container_name: minio-tt
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: changeThisPassword
+    command: server /data --console-address ":9001"
+    ports:
+      - "127.0.0.1:9000:9000" # S3 API
+      - "127.0.0.1:9001:9001" # Admin console
+    volumes:
+      - ./minio-data:/data
+    networks:
+      - local
+    restart: always
+    mem_limit: 300m
+
   # Keycloak authentication service
   keycloak:
     image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION:-latest}  # Keycloak image
@@ -41,7 +74,7 @@ services:
       - postgres  # Ensure postgres starts first
     restart: always
     mem_limit: 1g  # Limit memory usage to 500MB
-    command: start  # Start Keycloak
+    command: start # Start Keycloak
 
   # Nginx reverse proxy
   nginx:
@@ -88,6 +121,7 @@ services:
 # Define volumes for data persistence
 volumes:
   postgres_data:  # PostgreSQL data volume
+  postgres_data_tt:
 
 # Define networks for service communication
 networks:

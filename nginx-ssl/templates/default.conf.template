@@ -31,3 +31,14 @@ server {
 
     root /var/www;
 }
+server {
+    listen 80;
+    server_name tt.momosi.org;
+
+    location ~ /.well-known/acme-challenge {
+        allow all;
+        root /var/www/certbot;
+    }
+
+    root /var/www;
+}
